@@ -1,0 +1,87 @@
+DevOps
+192.168.3.46
+root
+centos
+...........
+dev
+192.168.3.47
+root
+centos
+...........
+
+cat /proc/version
+
+cat /etc/*release
+
+vi /etc/hostname 
+kpldb
+
+vi /etc/hosts
+192.168.3.14 kpldb kpldb.kumudini.com
+
+cat /etc/sysconfig/network-scripts/ifcfg-enp0s3	- config network manually
+
+
+yum install net-tools -y			- install network tools
+
+...................................................
+Install Docker Engine on CentOS
+
+yum install -y yum-utils
+dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
+
+sudo yum-config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
+
+dnf list docker-ce
+
+yum install docker-ce docker-ce-cli containerd.io docker-compose-plugin -y
+
+yum list docker-ce --showduplicates | sort -r
+
+systemctl start docker
+
+systemctl enable docker
+
+systemctl status docker
+
+docker --version
+
+docker run hello-world
+
+#How to use docker
+docker images
+docker search jenkins/centos/windows 		- search containers
+docker pull jenkins/centos/windows
+
+docker run -it --name vm1 ubuntu /bin/bash
+
+service docker status	- show container status
+docker start vm1		- container id / container name
+docker attach vm1		- connect to container
+docker ps -a		- list all container
+docker ps			- list active container
+docket stop vm1		- stop container
+docker rm vm1		- remove container
+docker rmi tomcat		- remove images
+
+
+.............................
+How to Run Nginx inside Docker Containe:
+
+docker run ubuntu bash -c "apt-get -y update" 
+docker run -it ubuntu bash
+apt install nginx
+docker inspect tomcat
+exit
+docker ps -l				- show list with latest command
+docker commit 5976e4ae287c ubuntu-nginx	- save to installed apps with container
+docker images
+docker run ubuntu-nginx which nginx		- find nginx install location
+docker run -it -p 81:80 ubuntu-nginx /bin/bash	- Run Nginx inside Docker Containe
+pressing Ctrl-p + Ctrl-q			- exit to without stop container
+docker ps
+netstat -tlpn
+
+
+
+cp -R Pictures Pictures_backup 		- copy direcory

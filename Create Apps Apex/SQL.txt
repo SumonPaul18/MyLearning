@@ -1,0 +1,36 @@
+
+conn sys/sys@orclpdb as sysdba
+
+cl scr
+
+select name from V$database;
+
+create user apex identified by 12345;
+show user
+grant dba to apex;
+...................................
+#show input or output case sensative
+show parameter cas
+#change
+...................................
+create table "customer"
+(
+serial	number(20),
+empid	number(20),
+first_name	Varchar2(20),
+last_name		varchar2(20),
+address		varchar2(30),
+mobile		number(11),
+area		varchar2(20),
+); 
+
+
+CREATE TABLE STUDENT(
+QUOTA VARCHAR2(20),
+MR_NO NUMBER(20),
+COURSE VARCHAR2(20),
+SESSION NUMBER(20),
+ROLL NUMBER(20),
+SNAME VARCHAR2(30)
+);
+			

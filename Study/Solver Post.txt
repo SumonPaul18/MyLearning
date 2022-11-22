@@ -1,0 +1,21 @@
+#Free_Help_Post
+
+বিষয়ঃ নিজস্ব হার্ডওয়্যার সার্ভারকে হোস্টিং সার্ভার তৈরি করা।
+
+উদ্দেশ্যঃ একটি ডোমেইন নেইম কেনা আছে কিন্তু হোস্টিং না কিনে নিজস্ব হার্ডওয়্যার সার্ভারকে হোস্টিং সার্ভার তৈরি করে কেনা ডোমেইন নেইম Add করে পেইড হোস্টিং সার্ভারের মত বিশেষ করে Web Site এবং Mail Server হিসাবে ব্যবহার করতে চাই।  
+
+কার্যপ্রনালীঃ একটি Server Computer এ  CentOS 8 অপারেটিং সিস্টেম install করা হয়েছে এবং Public IP Assign করা আছে। Cpanel হিসাবে ফ্রি CentOS Web Panel(CWP) Install করা হয়েছে। 
+
+তারপরে CWP এর basic configuration করা হয়েছে যেমন Hostname, DNS, Name Server, Firewall etc.
+
+এবং Cloudflare এ  উক্ত Domain add করা হয়েছে।
+
+ফলাফলঃ উক্ত Domain এর জন্য নিজস্ব হার্ডওয়্যার সার্ভার হোস্টিং সার্ভার হিসাবে কাজ করছে যেমন Website, Wordpress,FTP কিন্তু  Mail Server ঠিকমত কাজ করছে না।
+
+
+সমস্যাঃ CWP দিয়ে তৈরি করা  Mail Server থেকে Google বা Yahoo তে  mail send and received হচ্ছে না। অথচ Google বা Yahoo ছাড়া অন্য নিজস্ব Domain এর যে  Mail Server আছে যেমনঃ (sumon@kumudinipharma.com.bd) এই Address এ মেইল শুধু Sent হয়, কিন্তু receive হয় না। 
+
+
+#এমন কেউ আছেন যিনি এই বিষয়টি বুঝতে পেরেছে এবং আমাকে সাহায্য করতে পারবেন? 
+
+ধন্যবাদ।

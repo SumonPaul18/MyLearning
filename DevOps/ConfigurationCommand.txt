@@ -1,0 +1,9 @@
+cat /proc/version
+
+cat /etc/*release
+
+vi /etc/hostname 
+kpldb
+
+vi /etc/hosts
+192.168.3.14 kpldb kpldb.kumudini.com

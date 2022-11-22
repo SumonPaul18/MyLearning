@@ -1,0 +1,8 @@
+Reference:
+1. https://www.youtube.com/watch?v=IHt5kmxqn-U
+2. https://www.youtube.com/watch?v=eSSheYx4Uyk
+3. https://blog.opennix.ru/posts/use-terraform-with-virtualbox/
+4. https://eclipsys.ca/terraform-for-dummies-part-5-terraform-deployment-on-premises-kvm/
+
+
+

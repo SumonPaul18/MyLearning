@@ -1,0 +1,578 @@
+
+192.168.3.14	kpldb.kumudini.com   https://kpldb:5500/em
+
+
+
+root
+centos
+kumudini
+
+
+#Add now Static ip
+nmtui
+
+#####Install Oracle 19c###Apex and ords and tomcat###
+Reference: 
+1. https://oracle-base.com/articles/19c/oracle-db-19c-installation-on-oracle-linux-8
+2. https://gist.github.com/hkneptune/d3e80361cf5871dc8840176741ddff50
+3. https://oracle-base.com/articles/misc/oracle-rest-data-services-ords-installation-on-tomcat
+4. https://www.centlinux.com/2020/04/install-oracle-database-19c-on-centos-8.html
+5. https://www.youtube.com/watch?v=U4kMkHWQfPQ (Following)
+6. https://www.youtube.com/watch?v=Y5NwopFn1JA (19c Silent Installation)
+7. https://www.linkedin.com/pulse/how-install-oracle-apex-201-centos-linux-7-vladimir-goncharov?trk=public_profile_article_view
+8. https://doyensys.com/blogs/install-and-configure-oracle-apex-with-ords-and-apache-tomcat/ (For Apex)
+9. https://oracle-base.com/articles/misc/oracle-rest-data-services-ords-installation-on-tomcat (Install Ords with Tomcat)
+
+10.https://oracle-base.com/articles/linux/automating-database-startup-and-shutdown-on-linux [For Automatic Database Startup and shutdown]
+11. https://docs.oracle.com/en/database/oracle/oracle-rest-data-services/19.4/aelig/installing-REST-data-services.html#GUID-1E64886C-C85C-49B5-A98E-79B9EC8455B4 [ORDS Install Related]
+12. https://joelkallman.blogspot.com/2017/05/apex-and-ords-up-and-running-in2-steps.html [ORDS with Params file]
+13. https://bigdataenthusiast.wordpress.com/2020/08/02/apex-20-1-installation/ [ORDS Install Details]
+
+
+.......................For Silent Installation...............................
+
+cat /proc/version
+
+cat /etc/*release
+
+vi /etc/hostname 
+kpldb
+vi /etc/hosts
+192.168.3.14 kpldb kpldb.kumudini.com
+
+yum update -y
+
+yum -y localinstall oracle-database-preinstall-19c-1.0-2.el8.x86_64.rpm
+.................
+#When do yum update Then face Bellow type Error
+.................
+Error: Failed to download metadata for repo 'AppStream'
+
+1. 
+cd /etc/yum.repos.d/
+sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
+sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+
+yum update -y
+
+curl -o oracle-database-preinstall-19c-1.0-2.el8.x86_64.rpm https://yum.oracle.com/repo/OracleLinux/OL8/appstream/x86_64/getPackage/oracle-database-preinstall-19c-1.0-2.el8.x86_64.rpm
+
+yum -y localinstall oracle-database-preinstall-19c-1.0-2.el8.x86_64.rpm
+
+#Another Ways to solve yum repos
+
+#Need to: Migrate to CentOS Stream 8 or an alternative distro
+
+1. dnf --disablerepo '*' --enablerepo=extras swap centos-linux-repos centos-stream-repos
+2. dnf distro-sync -y
+................
+
+passwd oracle
+centos
+
+vi /etc/selinux/config
+
+#edit this line [ SELINUX=permissive ]
+
+setenforce Permissive
+
+#create directory for Oracle software and oracle data
+mkdir -p /u01/app/oracle/product/19.0.0/dbhome_1
+mkdir -p /u01/oradata
+chown -R oracle:oinstall /u01
+chmod -R 775 /u01
+
+#Create Scripts Folder
+mkdir /home/oracle/scripts
+
+#Set for environment variable
+cat > /home/oracle/scripts/setEnv.sh <<EOF
+
+export TMP=/tmp
+export TMPDIR=\$TMP
+
+export ORACLE_HOSTNAME=kpldb
+export ORACLE_UNQNAME=orcl
+export ORACLE_BASE=/u01/app/oracle
+export ORACLE_HOME=\$ORACLE_BASE/product/19.0.0/dbhome_1
+export ORA_INVENTORY=/u01/app/oraInventory
+export ORACLE_SID=orcl
+export PDB_NAME=orclpdb
+export DATA_DIR=/u01/oradata
+
+export PATH=/usr/sbin:/usr/local/bin:\$PATH
+export PATH=\$ORACLE_HOME/bin:\$PATH
+
+export LD_LIBRARY_PATH=\$ORACLE_HOME/lib:/lib:/usr/lib
+export CLASSPATH=\$ORACLE_HOME/jlib:\$ORACLE_HOME/rdbms/jlib
+EOF
+
+#Go to Database installation folder
+cd $ORACLE_HOME
+
+#Unzip Oracle File in db_home location
+ unzip -oq /home/oracle/LINUX.X64_193000_db_home.zip 
+
+..............................................
+#How To Enable X11#
+rpm -qa | grep xorg-x11-xauth
+vi /etc/ssh/sshd_config
+vi /etc/ssh/ssh_config
+--comment out and yes in (Both file)
+1.
+X11Forwarding yes
+
+systemctl restart sshd
+
+2.
+%% Now Install if in Windows pc so install Xming Software.%%
+3.
+in Putty ssh under check X11 option
+4.
+login root user from putty and go oracle user from [ ssh -X oracle@192.168.3.14 ]
+
+now check X11 display forward is now working. 
+
+cd /u01/app/oracle/product/19.0.0/dbhome_1/
+
+######################
+
+#DISPLAY environmental variable.
+
+DISPLAY=kpldb.kumudini.com:0.0;
+
+export DISPLAY
+
+###########*
+#For Error: [INS-08101] Unexpected error while executing the action at state: 'supportedOSCheck'
+
+&&Solution> in linux terminal:
+
+export CV_ASSUME_DISTID=OEL7.8
+
+#Oracle Intsall file
+
+./runInstaller
+
+#After database installtion compelete Then check Sqlplus Version#
+
+sqlplus -version
+
+#Post Installation
+cat /etc/oratab
+vi /etc/oratab
+orcl:/u01/app/oracle/product/19.0.0/dbhome_1:Y
+
+#Enable Oracle Managed Files (OMF) and make sure the PDB starts when the instance starts.
+sqlplus / as sysdba <<EOF
+alter system set db_create_file_dest='${DATA_DIR}';
+alter pluggable database ORCLPDB save state;
+exit;
+EOF
+
+#Automatically Boot time start Database
+vi /home/oracle/.bash_profile
+lsnrctl start
+dbstart \$ORACLE_HOME
+
+sqlplus / as sysdba
+
+#After database installtion compelete then set password_life_time parameter in sql
+
+ALTER PROFILE DEFAULT LIMIT PASSWORD_LIFE_TIME UNLIMITED; 
+
+###########*
+sqlplus sys/sys@orclpdb as sysdba
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@
+Apex install in Linux
+@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+@@Check Apex Version in SQL
+SELECT * FROM apex_release; 
+
+* apex install zip file store in linux oracle user download directory
+* apex zip file unzip to /u01 directory
+cd /u01
+unzip -oq /home/oracle/apex_21.1.zip
+* finish unzip then verify
+cd apex
+sqlplus sys/sys@orclpdb as sysdba
+sqlplus / as sysdba
+show con_name
+show pdbs;
+--if not plugable database so need to alter session 
+alter session set container = orclpdb;
+show con_name
+#for case sensative #*
+alter system set sec_case_sensitive_logon=false scope=both;
+
+alter session set container = orclpdb;
+
+show con_name
+
+#Permenaitly Add PDB Database
+
+alter system set db_create_file_dest='${DATA_DIR}';
+
+ALTER PLUGGABLE DATABASE ORCLPDB SAVE STATE;
+
+#Another Ways
+export ORACLE_PDB_SID=orclpdb
+
+
+SQL>exit  --from sql
+
+lsnrctl status 
+
+lsnrctl stop
+
+lsnrctl start
+
+# when lsnrctl start then show (The listener supports no services)#
+>netmgr (open gui mode with xming service, here create service and listeners, 1st step add net name for clcik + and go step by step )
+
+# Edit tnsname
+vi /u01/app/oracle/product/19.0.0/dbhome_1/network/admin/tnsnames.ora
+
+vi /u01/app/oracle/product/19.0.0/dbhome_1/network/admin/listener.ora
+
+#check tns name#
+tnsping orclpdb
+
+export ORACLE_PDB_SID=orclpdb
+
+select name from v$datafile;
+select name from v$database;
+create tablespace apex datafile '/u01/app/oracle/oradata/ORCL/orclpdb/apex.dbf' size 1000m autoextend on next 1m;
+
+--now install apex
+@apexins apex apex temp /i/
+--take some times depends on system configuration
+--now change admin password
+@apxchpwd.sql
+
+ADMIN
+Apex*123
+ 
+--now run command for web service
+@apex_rest_config.sql
+ 
+password for the APEX_LISTENER			Apex*123
+password for the APEX_REST_PUBLIC_USER user	Apex*123
+
+--now finish apex installision (but use apex in browser)
+--then apex use on browser after install ords
+
+#check apex port:
+SELECT DBMS_XDB.gethttpport FROM DUAL;
+#set apex port:
+EXEC DBMS_XDB.sethttpport(0);
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+JAVA or JDK install in Linux
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+--now check java vesion
+java -version
+--if not install java so then install java
+which java
+cd /u01
+tar xvzf /home/oracle/jdk-18.0.2.1_linux-x64_bin.tar.gz
+vi /home/oracle/.bash_profile
+#add two line in .bash_profile
+export JAVA_HOME=/u01/jdk-18.0.2.1
+export PATH=$JAVA_HOME/bin:$PATH
+source ~/.bash_profile
+echo $JAVA_HOME
+
+------End Java Installation------
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+ORDS install in Linux
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+>> How to Check Ords install or not in DB
+select ords.installed_version from dual;
+
+cd /u01
+--create directory (where location is app and apex main config file store)
+mkdir ords
+cd ords
+unzip -oq /home/oracle/ords.zip
+--finish unzip
+ls 
+--check ords.war file
+--now create another directory in ords 
+mkdir conf
+
+>> Edit ORDS Params file
+vi /u01/ords/params/ords_params.properties
+
+db.hostname=kpldb
+db.port=1521
+# CUSTOMIZE db.servicename
+db.servicename=orclpdb
+db.username=APEX_PUBLIC_USER
+db.password=Apex#123
+migrate.apex.rest=false
+plsql.gateway.add=true
+rest.services.apex.add=true
+rest.services.ords.add=true
+schema.tablespace.default=APEX
+schema.tablespace.temp=TEMP
+standalone.mode=false
+standalone.http.port=8080
+standalone.use.https=false
+# CUSTOMIZE standalone.static.images to point to the directory 
+# containing the images directory of your APEX distribution
+standalone.static.images=/u01/apex/images
+user.apex.listener.password=Apex#123
+user.apex.restpublic.password=Apex#123
+user.public.password=Apex#123
+user.tablespace.default=APEX
+user.tablespace.temp=TEMP
+sys.user=SYS
+sys.password=sys
+restEnabledSql.active=true
+feature.sdw=true
+database.api.enabled=true
+
+-----
+Trobuleshooting:
+java -jar ords.war config --db-pool default secret db.password 
+-----
+
+#Before Params file edit and set config store folder
+$JAVA_HOME/bin/java -jar ords.war configdir /u01/ords/conf
+
+# ORDS Installation Using a Parameter File
+java -jar ords.war install --parameterFile /u01/ords/params/ords_params.properties
+
+#ORDS run  Standalone Mode
+$JAVA_HOME/bin/java -jar ords.war standalone
+
+#ORDS install advanced mode using Params file
+$JAVA_HOME/bin/java -jar ords.war install advanced
+
+#ORDS install default mode
+$JAVA_HOME/bin/java -jar ords.war install
+
+/u01/ords/conf --now given location for store config data: it is that path
+--when given path and enter after then given some instraction
+
+[localhost]:192.168.3.28 
+listen port [1521]:default 
+service name:orclpdb
+ORDS_PUBLIC_USER:Apex*123
+Enter the administrator username:sys
+Enter the database password for SYS AS SYSDBA:sys
+
+#If you want ords start standalone#
+1 or not 2 for exit
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+Uninstall or remove ords 
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+cd /u01/ords
+java -jar ords.war uninstall
+
+then remove ords folder from system
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+Tomcat Install for Web Server
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+--download tomcat store in /u01 directory in tomcat folder
+cd /u01 
+mkdir tomcat9
+tar -xvzf /home/oracle/apache-tomcat-9.0.64.tar.gz
+cd /u01/tomcat9
+mv /u01/apache-tomcat-9.0.64/* /u01/tomcat9
+
+--set variable add this line in .bashrc file
+echo "export CATALINA_HOME="/u01/tomcat9"">>~/.bashrc
+
+vi /home/oracle/.bashrc
+
+export JAVA_HOME=/u01/jdk-18.0.2.1
+export CATALINA_HOME=/u01/tomcat9
+export CATALINA_BASE=$CATALINA_HOME
+
+--check add this line or not
+more ~/.bashrc
+--execute the .bashrc file
+source ~/.bashrc
+--now start tomcat server
+cd $CATALINA_HOME
+
+#Add Tomcat start/stop script
+vi /home/oracle/scripts/start_all.sh
+and add on last of file
+/bin/bash /u01/tomcat9/bin/startup.sh
+vi /home/oracle/scripts/stop_all.sh
+/bin/bash /u01/tomcat9/bin/shutdown.sh
+
+------------------
+sh /u01/tomcat9/bin/shutdown.sh
+sh /u01/tomcat9/bin/startup.sh
+
+./startup.sh or sh startup.sh  (for run shell script then use before file sh or ./)
+
+#now check web broeser 
+ 192.168.3.14:8080
+#show tomcat default website
+#Configure Tomcat Manager Credential
+vi /u01/tomcat9/conf/tomcat-users.xml
+#add below line for Tomcat Manager Credential
+
+<role rolename="admin-gui,manager-gui"/> 
+<user username="admin" password="admin" roles="admin-gui,manager-gui"/>
+
+#change you port as you need
+vi /u01/tomcat9/conf/server.xml
+
+#Allow all ip and add for tomcat browser##
+vi /u01/tomcat9/webapps/host-manager/META-INF/context.xml
+
+allow="127\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:1 |192.168.3.*" />
+
+vi /u01/tomcat9/webapps/manager/META-INF/context.xml
+
+allow="127\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:1 |192.168.3.*" />
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+Deploy ORDS in Tomcat
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+- Go to Tomcat Default web site
+http://localhost:8080/ or http://192.168.3.14:8080/
+- Click
+Server Status
+- Click
+List Applications
+- Under [Deploy] Section
+WAR or Directory path: /u01/ords/ords.war
+#Create i folder in Tomcat/webapps
+mkdir -p  $CATALINA_HOME/webapps/i/
+#Copy /apex/images To Tomcat/webapps/i
+cp -R /u01/apex/images/* $CATALINA_HOME/webapps/i/
+
+#OR Another ways
+
+cd /u01/
+mkdir -p  $CATALINA_HOME/webapps/i/
+
+cp -R /u01/apex/images/* $CATALINA_HOME/webapps/i/
+
+cp /u01/ords/ords.war $CATALINA_HOME/webapps
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@
+Now Apex Installation Finish
+@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+http://192.168.3.14:8080/ords/apex_admin 	[Administrator Mode]
+
+http://192.168.3.14:8080/ords			[Developer Mode]
+
+.......
+echo $ORACLE_SID
+......................
+Listencer Status and Start
+..................
+lsnrctl status
+
+lsnrctl start
+.......................
+sqlplus / as sysdba
+
+sqlplus sys/sys@orclpdb as sysdba
+
+show pdbs
+
+show con_name
+
+alter session set container = orclpdb;
+
+###### Error ######
+ERROR at line 1:
+ORA-01109: database not open
+##############
+select name, open_mode from v$pdbs;
+
+ALTER PLUGGABLE DATABASE ORCLPDB OPEN;
+
+ALTER PLUGGABLE DATABASE ORCLPDB SAVE STATE;
+
+#How to check db.servicename
+select value from v$parameter where name like '%service_name%';
+
+
+select name from V$SERVICES;
+select name from V$ACTIVE_SERVICES;
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+IO Error: The Network Adapter could not establish the connection
+-----------------------------------------------
+sqlplus / as sysdba
+
+sqlplus sys/sys@orclpdb as sysdba
+
+show pdbs
+
+show con_name
+
+alter session set container = orclpdb;
+
+
+select username,account_status from dba_users where username like 'APEX%';
+
+select username,account_status from dba_users where username like 'ORDS%';
+
+SELECT username, account_status FROM dba_users WHERE ACCOUNT_STATUS LIKE '%EXPIRED%';
+
+#Create Pluggable Database
+
+CREATE PLUGGABLE DATABASE orcl ADMIN USER sys IDENTIFIED BY sys
+
+-----------------------
+alter user apex_public_user account unlock;
+
+-----------------------
+alter user APEX_PUBLIC_USER identified by Apex#123 account unlock;
+alter user APEX_LISTENER identified by Apex#123 account unlock;
+alter user APEX_REST_PUBLIC_USER identified by Apex#123 account unlock;
+alter user APEX_220100 identified by Apex#123 account unlock;
+
+
+alter user ORDS_METADATA identified by Apex#123 account unlock; 
+alter user ORDS_PUBLIC_USER identified by Apex#123 account unlock;  
+alter user ORDSYS identified by Apex#123 account unlock;
+alter user ANONYMOUS identified by Apex#123 account unlock;
+...................
+#Create Pluggable Database with existing Database
+
+CREATE PLUGGABLE DATABASE orcl ADMIN USER orcladmin IDENTIFIED BY orcl
+FILE_NAME_CONVERT = ('/u01/oradata/ORCL/pdbseed/', '/u01/oradata/ORCL/');
+....................
+create pfile='/u01/app/oracle/product/19.0.0/dbhome_1/dbs/initorcl2.ora' from spfile='/u01/app/oracle/product/19.0.0/dbhome_1/dbs/initorcl2.ora';
+
+
+
+
+
+**************** Unlock Apex User ********************
+# Log into your database as sys user and run.
+> Find user of kumudini schema
+
+select * from APEX_200100.WWV_FLOW_FND_USER
+where account_locked = 'Y'
+and default_schema = 'KUMUDINI'
+
+> Update user unlock of kumudini schema
+
+update APEX_200100.WWV_FLOW_FND_USER
+set account_locked = 'N'
+where User_name in ('ADMIN')
+and default_schema = 'KUMUDINI'
+
+-------------------------------------------------------

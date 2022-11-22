@@ -1,0 +1,22 @@
+
+1. Accounts & Student Management System (KWMC)
+2. Accounts Management System (KPL)
+3. Admin User for All System
+4. Center Store Management System (CSMS)
+5. Doctor Service
+6. Factory Inventory management System (FIMS)
+7. General Ledger Management System
+8. Management Information System (MIS).
+9. Payroll Management System (KPL)
+10. Personal  Management Information System (PMIS)
+
+
+1> 
+1.1 Entry Menu
+2. Report Menu
+3. Foreign Student Menu
+Back
+
+1.1.1 Student Information Entry
+1.1.2 Charted of Accounts Define
+1.1

@@ -1,0 +1,16 @@
+Account Details
+========================================
+IP Address: 118.179.155.237
+Web Panel Login: 
+Domain: kumudinipharma.com
+Username: kumudin
+Password: kumudini@369
+Admin Email: kplhelp@yahoo.com
+
+Panel URL: 
+http://cpanel.kumudinipharma.com:2082
+https://cpanel.kumudinipharma.com:2083
+
+NameServers:
+gerald.ns.cloudflare.com
+peaches.ns.cloudflare.com
