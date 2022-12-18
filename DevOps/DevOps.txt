@@ -1,3 +1,10 @@
+Reference:
+[Open Source DevOps Tools]
+1. https://www.softwaretestinghelp.com/open-source-devops-tools-installation/
+
+
+
+.............................................................
 DevOps
 192.168.3.46
 root
@@ -28,6 +35,7 @@ yum install net-tools -y			- install network tools
 Install Docker Engine on CentOS
 
 yum install -y yum-utils
+
 dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
 
 sudo yum-config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
@@ -55,14 +63,14 @@ docker pull jenkins/centos/windows
 
 docker run -it --name vm1 ubuntu /bin/bash
 
-service docker status	- show container status
-docker start vm1		- container id / container name
-docker attach vm1		- connect to container
-docker ps -a		- list all container
-docker ps			- list active container
-docket stop vm1		- stop container
-docker rm vm1		- remove container
-docker rmi tomcat		- remove images
+service docker status				- show container status
+docker start vm1				- container id / container name
+docker attach vm1				- connect to container
+docker ps -a					- list all container
+docker ps					- list active container
+docket stop vm1					- stop container
+docker rm vm1					- remove container
+docker rmi tomcat				- remove images
 
 
 .............................
@@ -73,15 +81,21 @@ docker run -it ubuntu bash
 apt install nginx
 docker inspect tomcat
 exit
-docker ps -l				- show list with latest command
-docker commit 5976e4ae287c ubuntu-nginx	- save to installed apps with container
+docker ps -l					- show list with latest command
+docker commit 5976e4ae287c ubuntu-nginx		- save to installed apps with container
 docker images
 docker run ubuntu-nginx which nginx		- find nginx install location
 docker run -it -p 81:80 ubuntu-nginx /bin/bash	- Run Nginx inside Docker Containe
 pressing Ctrl-p + Ctrl-q			- exit to without stop container
 docker ps
 netstat -tlpn
+cp -R Pictures Pictures_backup 			- copy direcory
+..............................
+#use to docker compose .yml file
 
+1st enable docker compose
+2nd download docker compose file or create
 
-
-cp -R Pictures Pictures_backup 		- copy direcory
+docker compose up				- run docker
+docker compose up -d				- run docker with deamon
+docker compose stop

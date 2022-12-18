@@ -1,0 +1,3 @@
+1. open CMD
+2. go to virtual box installed location
+3. VBoxmanager.exe clonemedium disk "vhdx location with file name" "vdi location with file name"

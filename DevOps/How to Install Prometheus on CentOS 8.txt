@@ -1,0 +1,8 @@
+How to Install Prometheus on CentOS 8
+
+Reference:
+1. https://www.linuxtechi.com/install-prometheus-monitoring-tool-centos-8-rhel-8/
+2. https://www.centlinux.com/2021/09/install-prometheus-systems-monitoring-tool-centos-rhel-8.html
+
+Monitoring Tools
+3. https://www.linuxtechi.com/category/monitoring-tools/

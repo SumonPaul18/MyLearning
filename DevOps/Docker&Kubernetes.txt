@@ -1,0 +1,4 @@
+Reference:
+1. https://www.tecmint.com/install-a-kubernetes-cluster-on-centos-8/
+2. https://upcloud.com/resources/tutorials/install-kubernetes-cluster-centos-8
+3. https://computingforgeeks.com/install-kubernetes-cluster-on-centos-with-kubeadm/
