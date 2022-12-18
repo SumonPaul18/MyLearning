@@ -1,0 +1,57 @@
+#check version
+cat /proc/version				- check OS version
+or
+cat /etc/*release				- check OS with details
+or
+cat /etc/redhat-release				- check OS brief
+
+#set hostname
+vi /etc/hostname 
+kpldb
+or
+hostnamectl set-hostname dotest
+or
+hostnamectl set-hostname "kvm.paulco.com"
+exec bash					- without restart for set-hostname 
+
+#add host file
+vi /etc/hosts
+192.168.3.14 kpldb kpldb.kumudini.com
+or
+echo -e "192.168.0.100 kvm kvm.paulco.com" >> /etc/hosts
+
+#install network-tools if not installed
+yum install net-tools -y			- install network tools
+
+#configure static ip
+cat /etc/sysconfig/network-scripts/ifcfg-enp0s3	- config network manually
+
+>>edit selected network-card change static & add IP info 
+
+BOOTPROTO=static
+
+IPADDR=192.168.1.10
+NETMASK=255.255.255.0
+GATEWAY=192.168.1.1
+DNS1=192.168.1.1
+DNS2=8.8.8.8
+DOMAIN=tecmint.lan
+
+
+or
+nmtui						- add static ip gui-mode
+
+#restart network manager
+systemctl restart NetworkManager		
+
+#check repolist
+yum repolist all
+
+#check sshd status
+systemctl status sshd
+
+#find any package install or not
+rpm -qa mariadb					- mariadb is a package name
+
+
+

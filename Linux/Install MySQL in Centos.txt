@@ -1,0 +1,43 @@
+#How to Install MySQL on CentOS 8
+ref: https://linuxhint.com/install-mysql-on-centos-8/
+
+#search mariadb
+yum search mariadb
+
+#info mariadb
+yum info mariadb
+
+#install mysql
+dnf install @mysql
+
+#check version
+mysql --version
+
+#start mysql service and check its status
+systemctl start mysqld.service
+
+systemctl status mysqld
+
+#enable mysql
+systemctl enable mysqld
+
+#display mysqld
+systemctl disable mysqld
+
+#secure mysql
+mysql_secure_installation		-All prompt type:y
+
+#log into mysql
+mysql -u root -p
+
+#create a new mysql database
+create database firstdb;
+
+#show mysql databases
+show databases;
+
+#create a new mysql user
+CREATE USER 'firstuser'@'localhost' IDENTIFIED BY 'typepassword';
+or
+GRANT ALL ON firstdb.* TO sumon@localhost IDENTIFIED BY 'typepassword';
+

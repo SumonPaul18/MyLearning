@@ -1,0 +1,48 @@
+[root@desktop0 ~]# smbclient -L samba
+ : centos
+
+[root@desktop0 ~]# mkdir /mnt/sadia
+[root@desktop0 ~]# mount -o username=sadia //samba/secure /mnt/fred
+ : centos
+[root@desktop0 ~]# echo "this is sadia" >> /mnt/sadia/sadia.txt
+
+[root@desktop0 ~]# mkdir /mnt/rakib
+[root@desktop0 ~]# mount -o username=rakib //samba/secure /mnt/rakib
+ : centos
+
+[root@desktop0 ~]# echo "this is rakib" >> /mnt/rakib/rakib.txt
+
+[root@desktop0 ~]# cat /mnt/sadia/sadia.txt
+
+Multiuser Mount:
+----------------
+
+[root@desktop0 ~]# rpm -qa | grep cifs-utils
+[root@desktop0 ~]# yum install cifs-utils -y
+[root@desktop0 ~]# mkdir /mnt/multiuser
+[root@desktop0 ~]# vim smb-multiuser.txt
+username=sadia
+password=centos
+
+[root@desktop0 ~]# vim /etc/fstab
+ //samba/secure /mnt/multiuser	cifs	crededentials=/root/smb-multiuser.txt,multiuser,sec=ntlmssp  0 0
+
+[root@desktop0 ~]# mount /mnt/multiuser
+
+[root@desktop0 ~]# df -HT
+
+[root@desktop0 ~]# su - sadia
+
+[root@desktop0 ~]$ echo "hello wolrd" > /mnt/multiuser/sadai1.txt
+[root@desktop0 ~]$ cifscreds add samba
+: centos
+
+[root@desktop0 ~]$ echo "hello wolrd" > /mnt/multiuser/sadai1.txt
+[root@desktop0 ~]$ cat /mnt/multiuser/sadai1.txt
+
+[root@desktop0 ~]# su - rakib
+[root@desktop0 ~]$ cifscreds add samba
+[root@desktop0 ~]$ echo "this is rakib" > /mnt/multiuser/rakib1.txt
+[root@desktop0 ~]$ cat /mnt/multiuser/sadai1.txt
+ hello world 
+

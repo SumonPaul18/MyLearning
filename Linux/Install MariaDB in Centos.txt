@@ -1,0 +1,53 @@
+#Centos 8 install and get started with MariaDB
+ref: https://linuxhint.com/centos-8-install-and-get-started-with-mariadb/
+
+#search mariadb
+yum search mariadb
+
+#info mariadb
+yum info mariadb
+
+#Installation
+dnf install @mariadb -y
+or
+dnf install @mariadb-server -y
+or
+yum install mariadb mariadb-server -y
+
+#enable mariadb
+systemctl enable --now mariadb
+
+#check status mariadb
+systemctl status mariadb
+
+#firewall enabled
+firewall-cmd --permanent --add-service=mysql
+firewall-cmd --reload
+
+#securing the mariadb server
+mysql_secure_installation		-All prompt type: y
+
+#test the installation mariadb
+Mysql -u root –p
+
+#create database
+create database testdb;
+
+#add new user
+GRANT ALL ON testdb.* TO sumon@localhost IDENTIFIED BY 'type pass without qoute';
+or
+CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password';
+
+#show database
+show databases;
+
+#quit from database console
+quit
+
+#connect to mariadb database
+mysql –u student –p ’secretePasswordHere’ test
+or
+mysql –u student –p test
+
+
+

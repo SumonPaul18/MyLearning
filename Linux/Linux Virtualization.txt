@@ -1,0 +1,51 @@
+Reference:
+1. https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_and_managing_virtualization/getting-started-with-virtualization-in-rhel-8_configuring-and-managing-virtualization
+
+2. https://linuxhint.com/kvm_qemu_centos8_install/
+
+3. https://www.tecmint.com/category/kvm/
+
+4. https://www.tecmint.com/install-kvm-in-centos-8/
+
+5. https://www.youtube.com/watch?v=1k1eBryRQlQ (Following)
+
+6. https://www.linuxtechi.com/install-kvm-hypervisor-on-centos-7-and-rhel-7/ (gui & cli mode installation)
+
+
+#check virtualization
+lscpu | grep Virtualization
+
+#how to know cpu supports Virtualization
+grep -E '(vmx|svm)' /proc/cpuinfo
+
+#Install kvm in centos
+yum install qemu-kvm libvirt virt-install virt-manager virt-install -y
+
+>>Creation of the bridge interface for the CentOS VM
+#go to the network configuration folder
+cd /etc/sysconfig/network-scripts
+
+#Create a bridge interface named br1
+vi ifcfg-br1
+
+#Add the below config to it
+DEVICE=br1
+STP=yes
+BRIDGING_OPTS=priority=32768
+TYPE=Bridge
+NAME=br1
+ONBOOT=yes
+
+#Attach bridge interface to the physical network interface
+BRIDGE=br1
+
+#Save the config and restart the network.
+service network restart
+
+#Verify the bridge interface has been attached to the physical network interface
+brctl show
+
+
+
+
+
