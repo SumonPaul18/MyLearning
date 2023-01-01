@@ -1,0 +1,117 @@
+
+#How to Check Your RAM or Memory
+
+free -h
+free -m
+vmstat -s
+cat /proc/meminfo
+top
+
+
+
+#How to Install Latest Wine in Ubuntu Linux
+https://www.tecmint.com/install-wine-in-ubuntu/
+
+
+sudo apt install --install-recommends wine
+wine --version
+wine rufus-3.13.exe
+
+#How to unzip a zip file in Ubuntu
+
+sudo apt install unzip
+
+unzip my_files.zip
+
+unzip my_files.zip -d /home/alishba/Desktop
+
+unzip -q my_files.zip
+
+
+
+
+#How to set Manually IP in Ubuntu
+
+ls /etc/netplan
+cat /etc/netplan/__.yaml
+
+vi /etc/netplan/__.yaml
+
+network:
+  version: 2
+  ethernets:
+     enp0s3:
+        dhcp4: false
+        addresses: [192.168.2.100/24]
+        gateway4: 192.168.2.1
+        nameservers:
+          addresses: [8.8.8.8, 8.8.4.4]
+          
+sudo netplan apply
+
+          
+
+
+dpkg -l
+
+dpkg --get-selections | grep postgres
+
+
+#How to Install Docker in Ubuntu
+
+docker --version
+
+sudo apt-get install curl
+sudo apt-get install gnupg
+sudo apt-get install ca-certificates
+sudo apt-get install lsb-release
+
+
+sudo mkdir -p /etc/apt/keyrings
+
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+
+
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
+
+sudo apt-get update
+
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
+
+sudo docker run hello-world
+
+
+docker compose version
+
+docker images
+
+docker ps -a
+
+docker ps
+
+docker ps -l
+
+sudo systemctl status docker
+
+docker search ubuntu
+
+docker pull ubuntu
+
+docker run -it ubuntu
+
+sudo docker start ubuntu
+
+
+sudo docker stop ubuntu
+
+
+sudo docker rm brave_brown
+
+docker exec -it zimbra bash
+
+
