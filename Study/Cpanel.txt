@@ -1,8 +1,0 @@
-yum install wget -y
-
-cd /usr/local/src
-
-wget http://centos-webpanel.com/Cwp
-
-sh Cwp-e
-
