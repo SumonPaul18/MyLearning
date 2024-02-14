@@ -1,4 +1,0 @@
-ref: 
-1. https://www.linuxtechi.com/install-openstack-centos-8-with-packstack/
-2. https://computingforgeeks.com/install-openstack-victoria-on-centos/
-3. https://linuxhint.com/install_openstack_centos/
